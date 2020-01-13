@@ -66,11 +66,14 @@ public class TCPServer {
                         byte[] sendBuf = new byte[1024];
                         String str = "xxxxx";
                         sendBuf = str.getBytes();
-                        DatagramPacket sendPacket = new DatagramPacket(sendBuf, sendBuf.length,
+                        DatagramPacket udpPacket = new DatagramPacket(sendBuf, sendBuf.length,
                                 InetAddress.getByName("192.168.22.103"), 61556);
-                        while (true) {
-                            udpSocket.send(sendPacket);
-                        }
+                        // while (true) {
+                        //     udpSocket.send(udpPacket);
+                        // }
+
+                        Thread t = new Thread_1(udpSocket, udpPacket);
+                        t.start();
                         // udpSocket.close();
                     }
                 }
@@ -107,6 +110,25 @@ public class TCPServer {
             }
         } catch (Exception e) {
 
+        }
+    }
+}
+
+class Thread_1 extends Thread {
+    final DatagramSocket udpSocket;
+    final DatagramPacket udpPacket;
+
+    public Thread_1(DatagramSocket udpSocket, DatagramPacket udpPacket) {
+        this.udpSocket = udpSocket;
+        this.udpPacket = udpPacket;
+    }
+
+    public void run() {
+        try {
+            while (true) {
+                udpSocket.send(udpPacket);
+            }
+        } catch (Exception e) {
         }
     }
 }
