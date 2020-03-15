@@ -4,9 +4,49 @@ import java.io.*;
 
 public class TCPServer {
     public static void main(String args[]) {
-        // String port = args[0];
-        // receiveData(Integer.valueOf(port));
-        createServer();
+        String port = args[0];
+        receiveData(Integer.valueOf(port));
+        // createServer1();
+    }
+
+    public static void createServer1() {
+        Socket socket = null;
+        ServerSocket serverSocket = null;
+        int port = 49152;
+        try {
+            serverSocket = new ServerSocket(port);
+            System.out.println("Server Started and listening to the port " + port);
+            while (true) {
+                socket = serverSocket.accept();
+                OutputStream out = new DataOutputStream(socket.getOutputStream());
+                byte[] byteArray = { (byte) 0, (byte) 0, (byte) 0, (byte) 13, (byte) 192, (byte) 168, (byte) 110,
+                        (byte) 11, (byte) -64, (byte) 0, (byte) 17, (byte) 1, (byte) 15, (byte) 255, (byte) 23,
+                        (byte) 112, (byte) -128 };
+                out.write(byteArray);
+                String str1 = Arrays.toString(byteArray);
+                System.out.println("Sent to client: " + str1);
+
+                InputStream is = socket.getInputStream();
+                BufferedInputStream bis = new BufferedInputStream(is);
+                while (true) {
+                    String data = "";
+                    int s = bis.read();
+                    if (s == -1) {
+                        break;
+                    }
+                    data += "" + (char) s;
+                    int len = bis.available();
+                    if (len > 0) {
+                        byte[] byteData = new byte[len];
+                        bis.read(byteData);
+                        data += new String(byteData);
+                    }
+                    System.out.println("Message received from the client: " + data);
+                }
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     public static void createServer() {
