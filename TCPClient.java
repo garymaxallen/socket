@@ -4,22 +4,22 @@ import java.io.*;
 public class TCPClient {
 
     public static void main(String args[]) {
-         String host = args[0];
-         String port = args[1];
-         String data = args[2];
+        String host = args[0];
+        String port = args[1];
+        String data = args[2];
         // sendData(host, Integer.valueOf(port));
         sendData1(host, Integer.valueOf(port), data);
-        //receiveData();
+        // receiveData();
     }
 
     public static void sendData1(String host, int port, String data) {
         Socket socket;
         try {
-            //String host = "192.168.122.107";
-            //int port = 6000;
+            // String host = "192.168.122.107";
+            // int port = 6000;
             socket = new Socket(host, port);
             System.out.println("Connected to server");
-            //String data = "qqq";
+            // String data = "qqq";
             OutputStream os = socket.getOutputStream();
             OutputStreamWriter osr = new OutputStreamWriter(os);
             BufferedWriter bw = new BufferedWriter(osr);
@@ -29,23 +29,29 @@ public class TCPClient {
 
             InputStream is = socket.getInputStream();
             BufferedInputStream bis = new BufferedInputStream(is);
-            while (true) {
+
+            int s = bis.read();
+            if (s == -1) {
+                System.out.println("No data from the server");
+            } else {
                 String receivedData = "";
-                int s = bis.read();
-                if (s == -1) {
-                    break;
-                }
                 receivedData += "" + (char) s;
                 int len = bis.available();
                 if (len > 0) {
                     byte[] byteData = new byte[len];
                     bis.read(byteData);
                     receivedData += new String(byteData);
+
+                    System.out.print("byte array received from the server: ");
+                    System.out.printf("%02x ", s);
+                    for (byte b : byteData) {
+                        System.out.printf("%02x ", b);
+                    }
+                    System.out.println();
                 }
                 System.out.println("Data received from the server: " + receivedData);
             }
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 
@@ -74,7 +80,6 @@ public class TCPClient {
                 System.out.println("Message received from the server: " + data);
             }
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 

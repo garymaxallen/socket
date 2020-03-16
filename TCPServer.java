@@ -4,9 +4,9 @@ import java.io.*;
 
 public class TCPServer {
     public static void main(String args[]) {
-        String port = args[0];
-        receiveData(Integer.valueOf(port));
-        // createServer1();
+        // String port = args[0];
+        // receiveData(Integer.valueOf(port));
+        createServer1();
     }
 
     public static void createServer1() {
@@ -40,12 +40,18 @@ public class TCPServer {
                         byte[] byteData = new byte[len];
                         bis.read(byteData);
                         data += new String(byteData);
+
+                        System.out.print("byte array received from the client: ");
+                        System.out.printf("%02x ", s);
+                        for (byte b : byteData) {
+                            System.out.printf("%02x ", b);
+                        }
+                        System.out.println();
                     }
                     System.out.println("Message received from the client: " + data);
                 }
             }
         } catch (Exception e) {
-            // TODO: handle exception
         }
     }
 
